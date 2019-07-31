@@ -1,0 +1,20 @@
+[kdcdefaults]
+ kdc_ports = {{ kdc_ports }}
+ kdc_tcp_ports = {{ kdc_tcp_ports }}
+
+[logging]
+ default = FILE:/var/log/krb5libs.log
+ kdc = FILE:/var/log/krb5kdc.log
+ admin_server = FILE:/var/log/kadmind.log
+ debug = FILE:/var/log/krb5debug.log
+
+[realms]
+  {{ kdc_realm | upper }} = {
+  max_life = 1d
+  max_renewable_life = 7d 
+  master_key_type = aes256-cts
+  acl_file = {{ kdc_acl_file }}
+  dict_file = /usr/share/dict/words
+  admin_keytab = {{ kdc_admin_keytab }}
+  supported_enctypes = aes256-cts:normal aes128-cts:normal arcfour-hmac:normal
+ }

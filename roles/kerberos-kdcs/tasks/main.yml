@@ -1,0 +1,21 @@
+---
+
+  - name: Install MIT KDC packages
+    package: name={{ kdc_server_packages }} state=present
+
+  - name: Deploy kdc.conf
+    template: src=roles/kerberos/templates/kdc.conf.j2 dest={{ kdc_config_file }} mode=0600 backup=yes
+
+  - name: Deploy kadm5.acl
+    template: src=roles/kerberos/templates/kadm5.acl.j2 dest={{ kdc_acl_file }} mode=0600 backup=yes
+
+  - name: Regenerate kerberos database
+    shell: kdb5_util destroy -f ; echo -e '{{ kdc_admin_pass }}\n{{ kdc_admin_pass }}' | kdb5_util create -s
+
+  - name:  Restart krb5kdc
+    service: name=krb5kdc state=restarted enabled=yes
+
+  - name: Generate admin principal
+    shell: kadmin.local -q 'addprinc -pw {{ kdc_admin_pass }} {{ kdc_admin }}'
+
+

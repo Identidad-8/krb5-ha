@@ -1,0 +1,32 @@
+---
+
+  - name: Create host principals
+    shell: kadmin.local -q 'addprinc -randkey host/{{ kdc_master }}' ; kadmin.local -q 'addprinc -randkey host/{{ kdc_slave }}'
+
+  - name: Deploy kpropd.acl
+    template: src=roles/kerberos/templates/kpropd.acl.j2 dest={{ kdc_kprop_acl_file }} mode=0644
+
+  - name: Deploy HA keytab
+    copy: src=./tmp/HA.keytab dest=/tmp mode=0600
+
+  - name: Add hosts to admin keytab
+    shell: (echo -e 'rkt /tmp/HA.keytab'; echo -e 'wkt /etc/krb5.keytab'; echo -e 'quit') | ktutil
+
+  - name: Remove HA keytab
+    file: path=/tmp/HA.keytab state=absent
+
+  - name: Ensure kadmin is down
+    service: name=kadmin state=stopped enabled=yes
+
+  - name: Ensure krb5kdc is up
+    service: name=krb5kdc state=started enabled=yes
+
+  - name: Deploy kprop daemon
+    template: src=roles/kerberos/files/kpropd dest={{ kdc_kprop_daemon }} mode=0644 backup=no
+
+  - name: Enable kprop
+    shell: systemctl enable kprop.service
+
+  - name: Ensure kprop is up
+    service: name=kprop state=started enabled=yes
+

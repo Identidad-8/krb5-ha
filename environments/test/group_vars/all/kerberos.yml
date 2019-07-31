@@ -1,0 +1,15 @@
+---
+
+kdc_master: node1.domain.com
+kdc_slave: node2.domain.com
+
+kdc_realm: REALM.COM 
+kdc_domain: domain.com
+
+kdc_ad_realm: DOMAIN.COM
+kdc_ad_domain: domain.com
+kdc_ad_server: foo.domain.com
+kdc_ad_server2: bar.domain.com
+kdc_ad_server3: 
+kdc_ad_server4: 
+

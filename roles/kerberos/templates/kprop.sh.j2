@@ -1,0 +1,9 @@
+#!/bin/sh
+### Propagar la bbdd de Kerberos al KDCs secundario
+
+LOGFILE=/var/log/krb5prop.log
+echo ------ >> $LOGFILE
+/bin/date >> $LOGFILE
+/usr/sbin/kdb5_util dump /var/kerberos/krb5kdc/slave_datatrans 2>&1 >> $LOGFILE
+/usr/sbin/kprop -f /var/kerberos/krb5kdc/slave_datatrans {{ kdc_slave }} 2>&1 >> $LOGFILE
+

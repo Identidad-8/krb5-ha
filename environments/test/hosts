@@ -1,0 +1,16 @@
+[all]
+node1.domain.com
+node2.domain.com
+node3.domain.com
+node4.domain.com
+
+[kerberos.master]
+node1.domain.com
+
+[kerberos.slave]
+node2.domain.com
+
+[edge.nodes]
+node4.domain.com
+
+

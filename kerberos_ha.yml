@@ -1,0 +1,53 @@
+---
+
+### This playbook deploys and configure
+### - Kerberos clients
+### - 2 KDC (HA active-active, replication KDC1 ==> KDC2)
+### - One way trust realm with external AD
+###
+### $ ansible-playbook -i environments/<ENVIRONMENT> kerberos_ha.yml
+###
+
+- hosts: all
+  become: yes
+  vars_files:
+    - roles/kerberos/vars/main.yml
+
+  roles:
+    - name: kerberos-clients
+
+
+- hosts: kerberos.master, kerberos.slave
+  become: yes
+  vars_files:
+    - roles/kerberos/vars/main.yml
+
+  roles:
+    - name: kerberos-kdcs
+
+
+- hosts: kerberos.master, kerberos.slave
+  become: yes
+  vars_files:
+    - roles/kerberos/vars/main.yml
+
+  roles:
+    - name: kerberos-trust
+
+
+- hosts: kerberos.master
+  become: yes
+  vars_files:
+    - roles/kerberos/vars/main.yml
+
+  roles:
+    - name: kerberos-ha-master
+
+
+- hosts: kerberos.slave
+  become: yes
+  vars_files:
+    - roles/kerberos/vars/main.yml
+
+  roles:
+    - name: kerberos-ha-slave

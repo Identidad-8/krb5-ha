@@ -1,0 +1,28 @@
+---
+
+kdc_server_packages:
+  - krb5-server
+  - krb5-libs
+  - krb5-workstation
+kdc_client_packages:
+  - krb5-libs
+  - krb5-workstation
+
+kdc_service_name: krb5kdc.service
+kadmin_service_name: kadmin.service
+
+krb5_config_file: /etc/krb5.conf
+kdc_config_file: /var/kerberos/krb5kdc/kdc.conf
+kdc_admin_keytab: /etc/krb5.keytab
+kdc_acl_file: /var/kerberos/krb5kdc/kadm5.acl
+kdc_database_file: /var/kerberos/krb5kdc/principal
+kdc_kprop_acl_file: /var/kerberos/krb5kdc/kpropd.acl
+kdc_kprop_daemon: /etc/kpropd
+kdc_kprop_sh: /usr/local/bin/kprop.sh
+
+kdc_default_enctypes: aes256-cts aes128-cts arcfour-hmac
+kdc_admin_acl: "*/admin@{{ kdc_realm }} *"
+kdc_ports: 88
+kdc_tcp_ports: 88
+kdc_ad_ports: 88
+

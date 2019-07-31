@@ -1,0 +1,9 @@
+---
+
+  - name: Install MIT KDC client packages
+    package: name={{ kdc_client_packages }} state=present
+
+  - name: Deploy krb5.conf
+    template: src=./roles/kerberos/templates/krb5.conf.j2 dest={{ krb5_config_file }} mode=0644 backup=yes
+
+

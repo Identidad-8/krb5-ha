@@ -1,0 +1,55 @@
+[libdefaults]
+  default_realm = {{ kdc_realm | upper }}
+  renew_lifetime = 7d
+  ticket_lifetime = 24h
+  forwardable = true
+  dns_lookup_realm = false
+  dns_lookup_kdc = false
+  udp_preference_limit = 1
+  kdc_timeout = 10000
+  default_ccache_name = /tmp/krb5cc_%{uid}
+  default_tgs_enctypes = {{ kdc_default_enctypes }}
+  default_tkt_enctypes = {{ kdc_default_enctypes }}
+  rdns = false
+
+[logging]
+  default = FILE:/var/log/krb5kdc.log
+  admin_server = FILE:/var/log/kadmind.log
+  kdc = FILE:/var/log/krb5kdc.log
+
+[realms]
+  # KDC local
+  {{ kdc_realm | upper }} = {
+    admin_server = {{ kdc_master }}
+    kdc = {{ kdc_master }}:{{ kdc_ports }}
+    kdc = {{ kdc_slave }}:{{ kdc_ports }}
+  }
+
+  # AD
+  {{ kdc_ad_realm | upper }} = {
+    admin_server = {{ kdc_ad_server }}
+    kdc = {{ kdc_ad_server }}:{{ kdc_ad_ports }}
+{% if kdc_ad_server2 is not none %}
+    kdc = {{ kdc_ad_server2 }}:{{ kdc_ad_ports }}
+{% endif %}
+{% if kdc_ad_server3 is not none %}
+    kdc = {{ kdc_ad_server3 }}:{{ kdc_ad_ports }}
+{% endif %}
+{% if kdc_ad_server4 is not none %}
+    kdc = {{ kdc_ad_server4 }}:{{ kdc_ad_ports }}
+{% endif %}
+  }
+
+[domain_realm]
+  .{{ kdc_domain }} = {{ kdc_realm | upper }}
+  {{ kdc_ad_server }} = {{ kdc_ad_realm | upper }}
+{% if kdc_ad_server2 is not none %}   
+  {{ kdc_ad_server2 }} = {{ kdc_ad_realm | upper }}
+{%- endif -%}
+{% if kdc_ad_server3 is not none %}   
+  {{ kdc_ad_server3 }} = {{ kdc_ad_realm | upper }}
+{%- endif -%}
+{% if kdc_ad_server4 is not none %}   
+  {{ kdc_ad_server4 }} = {{ kdc_ad_realm | upper }}
+{%- endif -%}
+

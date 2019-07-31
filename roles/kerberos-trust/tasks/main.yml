@@ -1,0 +1,5 @@
+---
+
+  - name: Configure AD trust realm
+    shell: kadmin.local -q 'addprinc -e "aes256-cts-hmac-sha1-96:normal aes128-cts-hmac-sha1-96:normal" -pw {{ kdc_ad_trust_pass }} krbtgt/{{ kdc_realm }}@{{ kdc_ad_realm }}'
+
